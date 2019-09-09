@@ -1,0 +1,101 @@
+#:import SlideTransition kivy.uix.screenmanager.SlideTransition
+#:import Window kivy.core.window
+MyScreenManager:
+    transition: SlideTransition(duration = 0.5,direction='down')
+    canvas:
+        Color:
+            rgba: 1,1,1,1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'resources/SCREEN-BLANK2-1920x1920.PNG'
+    FirstScreen:
+    SecondScreen:
+<Label>:
+    color: 0,0,1,1
+    font_size: 50
+<Button>:
+    font_size: 20
+<ButtonShort>:
+    canvas:
+        Color: 
+            rgba:0,1,0,0
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    font_size: 20
+    background_normal: 'resources/dark-gray-box-lil.png'
+    border: [2]*4
+<ContentBoxLayout>:
+    size_hint: .5,.5
+    pos_hint: {'center_x':.5, 'center_y':.5}
+<Image>:
+    allow_stretch: False
+    keep_ratio: True
+<ButImage@ButtonBehavior+AsyncImage>:
+    id: but
+    opacity: 1 if self.state == 'normal' else .5
+    # source: 'resources/dark-gray-box-lil.png'
+    background_normal: 'resources/dark-gray-box-lil.png'
+    # Introduce Label incase you want text on top of the image
+    Label:
+        center: but.center
+        font_size: 20
+        color: 0,0,0,1
+        pos: self.pos
+        
+
+<FirstScreen>:
+    name: 'first'
+    ContentBoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'first screen!'
+        Image:
+            source: 'resources/colours.PNG'
+        ButImage:
+            Label: 
+                text: 'Button'
+        BoxLayout:
+            size_hint_y: .3
+            ButtonShort:
+                text: 'goto second screen'
+                on_release: app.root.current = 'second'
+            ButtonShort: 
+                text: 'get random colour screen'
+                on_release: app.root.new_colour_screen()
+<SecondScreen>:
+    name: 'second'
+    ContentBoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'second screen!'
+        Image:
+            source: 'resources/colours2.png'
+        BoxLayout:
+            Button:
+                text: 'goto first screen'
+                on_release: app.root.current = 'first'
+            Button:
+                text: 'get random colour screen'
+                on_release: app.root.new_colour_screen()
+<ColourScreen>:
+    ContentBoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'colour {:.2},{:.2},{:.2} screen'.format(*root.colour[:3])
+            font_size: 30
+        Widget:
+            canvas:
+                Color:
+                    rgba: root.color
+                Ellipse:
+                    pos: self.pos
+                    size: self.size
+        BoxLayout:
+            Button:
+                text: 'goto first screen'
+                on_release: app.root.current = 'first'
+            Button:
+                text: 'goto second screen'
+                on_release: app.root.current = 'second'
